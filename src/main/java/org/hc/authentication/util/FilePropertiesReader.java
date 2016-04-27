@@ -16,4 +16,13 @@ public class FilePropertiesReader {
 
     @Value("${custom.header.authorization.value}")
     private String headerValue;
+
+    @Value("${custom.authorization.secret}")
+    private String secret;
+
+    @Value("${custom.authorization.expiration}")
+    private Long expiration;
+
+    @Value("${custom.authorization.token.header}")
+    private String tokenHeader;
 }

@@ -3,3 +3,8 @@ custom:
     authorization:
       name: H-Test-App
       value: $$value11$$
+  authorization:
+      token:
+        header: H-Token
+      secret: dougthepugissofunnny
+      expiration: 30000
