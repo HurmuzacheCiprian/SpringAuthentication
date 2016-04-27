@@ -18,7 +18,7 @@ import java.util.Enumeration;
  * Created by roxana on 24.04.2016.
  */
 @Component
-public class RequestFilter implements Filter{
+public class RequestFilter implements Filter {
 
     @Autowired
     private AuthenticationService authenticationService;
@@ -42,20 +42,23 @@ public class RequestFilter implements Filter{
         Enumeration<String> headers = request.getHeaderNames();
         String header = "";
         String tokenHeader = "";
-        while(headers.hasMoreElements() && StringUtils.isEmpty(header)) {
+        while (headers.hasMoreElements() && StringUtils.isEmpty(header)) {
             String currentHeader = headers.nextElement();
-            if(currentHeader.equalsIgnoreCase(fileReader.getHeaderName())) {
+            if (currentHeader.equalsIgnoreCase(fileReader.getHeaderName())) {
                 header = currentHeader;
             }
-            if(currentHeader.equalsIgnoreCase(fileReader.getTokenHeader())) {
+            if (currentHeader.equalsIgnoreCase(fileReader.getTokenHeader())) {
                 tokenHeader = currentHeader;
             }
         }
 
-        if(!request.getRequestURI().equalsIgnoreCase("/authentication/token")) {
-            if(!authenticationService.isValidHeader(header,headerValue) || !isValidToken(request, tokenHeader)) {
+        if (!request.getRequestURI().equalsIgnoreCase("/authentication/token") && !request.getRequestURI().equalsIgnoreCase("/")
+                && !request.getRequestURI().contains(".js")
+                && !request.getRequestURI().contains(".css")
+                && !request.getRequestURI().contains(".html")) {
+            if (!authenticationService.isValidHeader(header, headerValue) || !isValidToken(request, tokenHeader)) {
                 response.setStatus(401);
-                return ;
+                return;
             }
         }
 
@@ -64,10 +67,10 @@ public class RequestFilter implements Filter{
 
     private boolean isValidToken(HttpServletRequest request, String tokenHeader) {
         String tokenHeaderValue = request.getHeader(fileReader.getTokenHeader());
-        if(StringUtils.isEmpty(tokenHeaderValue) && StringUtils.isEmpty(tokenHeader)) {
+        if (StringUtils.isEmpty(tokenHeaderValue) && StringUtils.isEmpty(tokenHeader)) {
             return false;
         } else {
-            if(authenticationService.isTokenValid(request.getServerName(), tokenHeaderValue)) {
+            if (authenticationService.isTokenValid(request.getServerName(), tokenHeaderValue)) {
                 return true;
             }
         }
